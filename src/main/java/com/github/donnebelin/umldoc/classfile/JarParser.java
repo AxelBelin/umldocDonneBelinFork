@@ -30,8 +30,7 @@ public final class JarParser {
   //private final HashSet<AssociationDependency> associations = new HashSet<>();
 
   private Entity currentEntity = null;
-//  private final HashMap<Entity,HashSet<Field>> fields = new HashMap<>();
-//  private final HashMap<Entity,HashSet<AssociationDependency>> associations = new HashMap<>();
+  private final HashMap<Entity,ArrayList<AssociationDependency>> associations = new HashMap<>();
 
   /**
    * Instantiate a new JarParser to parse all entities from a jar file.
@@ -134,6 +133,25 @@ public final class JarParser {
             .findFirst();
     oldEntity.ifPresent(entities::remove);
     entities.add(currentEntity);
+
+    var entityAssociations = associations.get(currentEntity);
+    int startIndex;
+    int endIndex;
+    while((startIndex = type.indexOf("<")) >= 0 && (endIndex = type.lastIndexOf(">")) >= 0){
+      type = type.substring(startIndex + 1,endIndex);
+      if(!type.contains("<")){
+        var tempType = type;
+        var entityRight = entities.stream()
+                .map(Entity::name)
+                .filter(entityName -> entityName.equals(tempType))
+                .findFirst();
+        if(entityRight.isPresent()){
+          var left = new Side(currentEntity, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
+          var right = new Side(currentEntity, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
+          entityAssociations.add(new AssociationDependency(left, right));
+        }
+      }
+    }
 
     /*
     var entityAsso = entities.stream()
