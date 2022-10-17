@@ -99,6 +99,14 @@ com_github_donnebelin_umldoc_classfile_JarParser "1" -->  "*" com_github_forax_u
 classDiagram
     direction TB
 
+com_github_forax_umldoc_core_Entity --> "*" com_github_forax_umldoc_core_Modifier : Not defined
+com_github_forax_umldoc_core_Entity --> "*" com_github_forax_umldoc_core_Field : Not defined
+com_github_forax_umldoc_core_Entity --> "*" com_github_forax_umldoc_core_Method_Parameter : Not defined
+com_github_forax_umldoc_core_Method --> "*" com_github_forax_umldoc_core_Modifier : Not defined
+com_github_forax_umldoc_core_Method --> "*" com_github_forax_umldoc_core_Method_Parameter : Not defined
+com_github_magickoders_JarReader_MyVisitor --> "*" com_github_forax_umldoc_core_Entity_Stereotype : Not defined
+com_github_donnebelin_umldoc_classfile_JarParser --> "*" com_github_forax_umldoc_core_Entity_Stereotype : Not defined
+com_github_donnebelin_umldoc_classfile_JarParser --> "*" com_github_forax_umldoc_core_AssociationDependency : Not defined
     class com_github_forax_umldoc_core_SubtypeDependency {
       -supertype: Entity
 			-subtype: Entity

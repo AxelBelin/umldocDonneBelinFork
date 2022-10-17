@@ -1,5 +1,6 @@
 package com.github.donnebelin.umldoc.gen;
 
+import com.github.donnebelin.umldoc.Helper;
 import com.github.forax.umldoc.core.AssociationDependency;
 import com.github.forax.umldoc.core.Entity;
 import com.github.forax.umldoc.core.Field;
@@ -19,6 +20,7 @@ public final class MermaidGenerator implements Generator {
     return Generator.fieldToString(field).replaceAll("<", "[").replaceAll(">", "]");
   }
 
+
   @Override
   public void generate(boolean header, List<Entity> entities, List<AssociationDependency> dependencies,
                        Writer writer) throws IOException {
@@ -31,6 +33,17 @@ public final class MermaidGenerator implements Generator {
               direction TB
           
           """);
+    }
+
+    //Entity --> "*" Field : fields
+    for (var dependency : dependencies) {
+      writer.append("""
+              %s --> "%s" %s : %s
+              """.formatted(dependency.left().entity().name(),
+              Helper.parseCardinalities(dependency.right().cardinality()),
+              dependency.right().entity().name(),
+              dependency.right().label().orElse("Not defined")
+      ));
     }
 
     for (var entity : entities) {
