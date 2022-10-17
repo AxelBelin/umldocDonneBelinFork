@@ -11,17 +11,15 @@ import org.objectweb.asm.RecordComponentVisitor;
 import java.io.IOException;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.MethodTypeDesc;
-import java.lang.invoke.MethodType;
 import java.lang.module.ModuleFinder;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Iterator;
 
 public class ASMTest {
   @Test
   public void asm() throws IOException {
-    var path = Path.of("target");
+    var path = Path.of("target/classes");
     var finder = ModuleFinder.of(path);
     for(var moduleReference: finder.findAll()) {
       try(var reader = moduleReference.open()) {
