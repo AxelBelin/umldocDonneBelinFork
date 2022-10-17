@@ -27,8 +27,12 @@ import org.objectweb.asm.Opcodes;
  */
 public final class JarParser {
   private final HashSet<Entity> entities = new HashSet<>();
-  private final HashSet<Field> fields = new HashSet<>();
-  private final HashSet<AssociationDependency> associations = new HashSet<>();
+  //private final HashSet<Field> fields = new HashSet<>();
+  //private final HashSet<AssociationDependency> associations = new HashSet<>();
+
+  private final HashMap<Entity,HashSet<Field>> fields = new HashMap<>();
+
+  private final HashMap<Entity,HashSet<AssociationDependency>> associations = new HashMap<>();
 
   /**
    * Instantiate a new JarParser to parse all entities from a jar file.
@@ -114,6 +118,9 @@ public final class JarParser {
 
   // 1 asso avec 1 seul sens = 1 field dont le type est une Entity présente dans entities
   private void addFieldOrAssociation(int access, String name, String type) {
+
+
+    /*
     var entityAsso = entities.stream()
             .filter(entity -> entity.name().equals(type))
             .findFirst();
@@ -124,15 +131,21 @@ public final class JarParser {
               name.replace('$', '_'),
               type
       ));
+      System.out.println(name + "  " + type);
     } else {
       var entityLeft = entityAsso.get();
       var entityRight = entities.stream()
               .filter(entity -> entity.name().equals(name))
               .findFirst().orElseThrow();
+
+
+
       var left = new Side(entityLeft, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
       var right = new Side(entityRight, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
       // TODO ajoiuter l'asso
     }
+    */
+
   }
 
   private void getASMData(ClassReader classReader) {
