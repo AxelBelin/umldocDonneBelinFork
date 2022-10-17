@@ -27,11 +27,11 @@ import org.objectweb.asm.Opcodes;
  */
 public final class JarParser {
   private final HashSet<Entity> entities = new HashSet<>();
-  //private final HashSet<Field> fields = new HashSet<>();
+//  private final HashSet<Field> fields = new HashSet<>();
   //private final HashSet<AssociationDependency> associations = new HashSet<>();
 
+  private Entity currentEntity = null;
   private final HashMap<Entity,HashSet<Field>> fields = new HashMap<>();
-
   private final HashMap<Entity,HashSet<AssociationDependency>> associations = new HashMap<>();
 
   /**
@@ -117,15 +117,21 @@ public final class JarParser {
   }
 
   // 1 asso avec 1 seul sens = 1 field dont le type est une Entity présente dans entities
-  private void addFieldOrAssociation(int access, String name, String type) {
-
+  private void addFieldOrAssociation(int access, String name, String type, HashSet<Field> currentFields) {
+    currentFields.add(new Field(
+            modifiers(access),
+            name.replace('$', '_'),
+            type
+    ));
+    fields.put(currentEntity, currentFields);
 
     /*
     var entityAsso = entities.stream()
-            .filter(entity -> entity.name().equals(type))
+            .filter(entity -> entity.name().contains(type)) // marche pas
             .findFirst();
 
     if(entityAsso.isEmpty()) {
+      System.out.println("field");
       fields.add(new Field(
               modifiers(access),
               name.replace('$', '_'),
@@ -133,22 +139,23 @@ public final class JarParser {
       ));
       System.out.println(name + "  " + type);
     } else {
-      var entityLeft = entityAsso.get();
+      System.out.println("asso");
       var entityRight = entities.stream()
-              .filter(entity -> entity.name().equals(name))
+              .filter(entity -> entity.name().contains(name))
               .findFirst().orElseThrow();
 
 
 
-      var left = new Side(entityLeft, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
+      var left = new Side(entityAsso.get(), Optional.empty(), true, Cardinality.ZERO_OR_ONE);
       var right = new Side(entityRight, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
-      // TODO ajoiuter l'asso
+      associations.add(new AssociationDependency(left, right));
     }
     */
 
   }
 
   private void getASMData(ClassReader classReader) {
+    var fields = new HashSet<Field>();
     classReader.accept(new ClassVisitor(Opcodes.ASM9) {
 
       @Override
@@ -160,13 +167,21 @@ public final class JarParser {
               String superName,
               String[] interfaces) {
         if (!name.equals("module-info")) {
-          entities.add(new Entity(
+          currentEntity = new Entity(
                   Set.of(),
                   name.replace('/', '_').replace('$', '_'),
                   resolveStereotype(superName),
-                  List.copyOf(fields),
+                  List.of(),
                   List.of()
-          ));
+          );
+
+//          entities.add(new Entity(
+//                  Set.of(),
+//                  name.replace('/', '_').replace('$', '_'),
+//                  resolveStereotype(superName),
+//                  List.copyOf(fields),
+//                  List.of()
+//          ));
         }
       }
 
@@ -178,9 +193,9 @@ public final class JarParser {
             addFieldOrAssociation(access, name, Arrays.stream(signature.split("/"))
                     .filter(part -> part.contains("<") || part.contains(">"))
                     .collect(Collectors.joining())
-                    .replace('$', '_'));
+                    .replace('$', '_'), fields);
           } else {
-            addFieldOrAssociation(access, name, ClassDesc.ofDescriptor(descriptor).displayName());
+            addFieldOrAssociation(access, name, ClassDesc.ofDescriptor(descriptor).displayName(), fields);
           }
         }
 
