@@ -31,8 +31,8 @@ public final class JarParser {
   //private final HashSet<AssociationDependency> associations = new HashSet<>();
 
   private Entity currentEntity = null;
-  private final HashMap<Entity,HashSet<Field>> fields = new HashMap<>();
-  private final HashMap<Entity,HashSet<AssociationDependency>> associations = new HashMap<>();
+//  private final HashMap<Entity,HashSet<Field>> fields = new HashMap<>();
+//  private final HashMap<Entity,HashSet<AssociationDependency>> associations = new HashMap<>();
 
   /**
    * Instantiate a new JarParser to parse all entities from a jar file.
@@ -123,7 +123,12 @@ public final class JarParser {
             name.replace('$', '_'),
             type
     ));
-    fields.put(currentEntity, currentFields);
+
+//    fields.put(currentEntity, currentFields);
+    currentEntity = new Entity(currentEntity.modifiers(), currentEntity.name(), currentEntity.stereotype(), List.copyOf(currentFields), currentEntity.methods());
+    var oldEntity = entities.stream().filter(entity -> entity.name().equals(currentEntity.name())).findFirst();
+    oldEntity.ifPresent(entities::remove);
+    entities.add(currentEntity);
 
     /*
     var entityAsso = entities.stream()
@@ -155,7 +160,7 @@ public final class JarParser {
   }
 
   private void getASMData(ClassReader classReader) {
-    var fields = new HashSet<Field>();
+    var currentFields = new HashSet<Field>();
     classReader.accept(new ClassVisitor(Opcodes.ASM9) {
 
       @Override
@@ -193,9 +198,9 @@ public final class JarParser {
             addFieldOrAssociation(access, name, Arrays.stream(signature.split("/"))
                     .filter(part -> part.contains("<") || part.contains(">"))
                     .collect(Collectors.joining())
-                    .replace('$', '_'), fields);
+                    .replace('$', '_'), currentFields);
           } else {
-            addFieldOrAssociation(access, name, ClassDesc.ofDescriptor(descriptor).displayName(), fields);
+            addFieldOrAssociation(access, name, ClassDesc.ofDescriptor(descriptor).displayName(), currentFields);
           }
         }
 
