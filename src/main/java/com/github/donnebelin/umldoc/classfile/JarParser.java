@@ -128,9 +128,10 @@ public final class JarParser {
       var entityLeft = entityAsso.get();
       var entityRight = entities.stream()
               .filter(entity -> entity.name().equals(name))
-              .findFirst();
+              .findFirst().orElseThrow();
       var left = new Side(entityLeft, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
-      var right = new Side(entityRight.get(), Optional.empty(), true, Cardinality.ZERO_OR_ONE);
+      var right = new Side(entityRight, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
+      // TODO ajoiuter l'asso
     }
   }
 
