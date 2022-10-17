@@ -1,6 +1,6 @@
 package com.github.donnebelin.umldoc.gen;
 
-import com.github.forax.umldoc.core.Dependency;
+import com.github.forax.umldoc.core.AssociationDependency;
 import com.github.forax.umldoc.core.Entity;
 import com.github.forax.umldoc.core.Field;
 
@@ -20,7 +20,7 @@ public final class MermaidGenerator implements Generator {
   }
 
   @Override
-  public void generate(boolean header, List<Entity> entities, List<Dependency> dependencies,
+  public void generate(boolean header, List<Entity> entities, List<AssociationDependency> dependencies,
                        Writer writer) throws IOException {
     requireNonNull(entities);
     requireNonNull(dependencies);
@@ -45,6 +45,7 @@ public final class MermaidGenerator implements Generator {
                       .stream()
                       .map(MermaidGenerator::escapeField)
                       .collect(Collectors.joining("\n\t\t\t"))
+
       ));
     }
   }

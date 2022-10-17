@@ -1,6 +1,7 @@
 package com.github.donnebelin.umldoc.gen;
 
-import com.github.forax.umldoc.core.Dependency;
+import com.github.donnebelin.umldoc.Helper;
+import com.github.forax.umldoc.core.AssociationDependency;
 import com.github.forax.umldoc.core.Entity;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PlantUmlGenerator implements Generator {
   @Override
-  public void generate(boolean header, List<Entity> entities, List<Dependency> dependencies,
+  public void generate(boolean header, List<Entity> entities, List<AssociationDependency> dependencies,
                        Writer writer) throws IOException {
     requireNonNull(entities);
     requireNonNull(dependencies);
@@ -25,6 +26,17 @@ public final class PlantUmlGenerator implements Generator {
           @startuml
           
           """);
+    }
+
+    for (var dependency : dependencies) {
+      writer.append("""
+              %s "%s" -->  "%s" %s : %s
+              """.formatted(dependency.left().entity().name(),
+              Helper.parseCardinalities(dependency.left().cardinality()),
+              Helper.parseCardinalities(dependency.right().cardinality()),
+              dependency.right().entity().name(),
+              dependency.right().label().orElse("Not defined")
+      ));
     }
 
     for (var entity : entities) {

@@ -30,7 +30,7 @@ public final class JarParser {
   //private final HashSet<AssociationDependency> associations = new HashSet<>();
 
   private Entity currentEntity = null;
-  private final HashMap<Entity,ArrayList<AssociationDependency>> associations = new HashMap<>();
+  private final ArrayList<AssociationDependency> associations = new ArrayList<>();
 
   /**
    * Instantiate a new JarParser to parse all entities from a jar file.
@@ -40,6 +40,11 @@ public final class JarParser {
    */
   public JarParser() throws IOException {
     recoverEntitiesFromJar();
+  }
+
+
+  public List<AssociationDependency> getAssociationDependencies(){
+    return List.copyOf(associations);
   }
 
   /**
@@ -134,7 +139,6 @@ public final class JarParser {
     oldEntity.ifPresent(entities::remove);
     entities.add(currentEntity);
 
-    var entityAssociations = associations.get(currentEntity);
     int startIndex;
     int endIndex;
     while((startIndex = type.indexOf("<")) >= 0 && (endIndex = type.lastIndexOf(">")) >= 0){
@@ -142,44 +146,16 @@ public final class JarParser {
       if(!type.contains("<")){
         var tempType = type;
         var entityRight = entities.stream()
-                .map(Entity::name)
-                .filter(entityName -> entityName.equals(tempType))
+                .filter(entity -> entity.name().contains(tempType))
                 .findFirst();
+
         if(entityRight.isPresent()){
-          var left = new Side(currentEntity, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
-          var right = new Side(currentEntity, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
-          entityAssociations.add(new AssociationDependency(left, right));
+          var left = new Side(currentEntity, Optional.empty(), true, Cardinality.ONLY_ONE);
+          var right = new Side(entityRight.get(), Optional.empty(), true, Cardinality.MANY);
+          associations.add(new AssociationDependency(left, right));
         }
       }
     }
-
-    /*
-    var entityAsso = entities.stream()
-            .filter(entity -> entity.name().contains(type)) // marche pas
-            .findFirst();
-
-    if(entityAsso.isEmpty()) {
-      System.out.println("field");
-      fields.add(new Field(
-              modifiers(access),
-              name.replace('$', '_'),
-              type
-      ));
-      System.out.println(name + "  " + type);
-    } else {
-      System.out.println("asso");
-      var entityRight = entities.stream()
-              .filter(entity -> entity.name().contains(name))
-              .findFirst().orElseThrow();
-
-
-
-      var left = new Side(entityAsso.get(), Optional.empty(), true, Cardinality.ZERO_OR_ONE);
-      var right = new Side(entityRight, Optional.empty(), true, Cardinality.ZERO_OR_ONE);
-      associations.add(new AssociationDependency(left, right));
-    }
-    */
-
   }
 
   private void getASMData(ClassReader classReader) {

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * Contains the main method.
@@ -43,7 +42,7 @@ public class Main {
       plantUmlGenerator.generate(
               true,
               entities,
-              List.of(),
+              parser.getAssociationDependencies(),
               writer);
       writer.append('\n')
               .append('\n')
@@ -52,7 +51,7 @@ public class Main {
       mermaidGenerator.generate(
               true,
               entities,
-              List.of(),
+              parser.getAssociationDependencies(),
               writer);
       writer.append("```");
     }

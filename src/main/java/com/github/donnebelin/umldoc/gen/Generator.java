@@ -1,9 +1,6 @@
 package com.github.donnebelin.umldoc.gen;
 
-import com.github.forax.umldoc.core.Dependency;
-import com.github.forax.umldoc.core.Entity;
-import com.github.forax.umldoc.core.Field;
-import com.github.forax.umldoc.core.Modifier;
+import com.github.forax.umldoc.core.*;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -39,7 +36,7 @@ public interface Generator {
    * @param writer the writer
    * @throws IOException if an I/O exception occurs
    */
-  void generate(boolean header, List<Entity> entities, List<Dependency> dependencies,
+  void generate(boolean header, List<Entity> entities, List<AssociationDependency> dependencies,
                 Writer writer) throws IOException;
 
   /**
