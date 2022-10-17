@@ -27,7 +27,6 @@ import org.objectweb.asm.Opcodes;
  */
 public final class JarParser {
   private final HashSet<Entity> entities = new HashSet<>();
-//  private final HashSet<Field> fields = new HashSet<>();
   //private final HashSet<AssociationDependency> associations = new HashSet<>();
 
   private Entity currentEntity = null;
@@ -116,7 +115,6 @@ public final class JarParser {
     return modifiers;
   }
 
-  // 1 asso avec 1 seul sens = 1 field dont le type est une Entity présente dans entities
   private void addFieldOrAssociation(int access, String name, String type, HashSet<Field> currentFields) {
     currentFields.add(new Field(
             modifiers(access),
@@ -124,9 +122,16 @@ public final class JarParser {
             type
     ));
 
-//    fields.put(currentEntity, currentFields);
-    currentEntity = new Entity(currentEntity.modifiers(), currentEntity.name(), currentEntity.stereotype(), List.copyOf(currentFields), currentEntity.methods());
-    var oldEntity = entities.stream().filter(entity -> entity.name().equals(currentEntity.name())).findFirst();
+    currentEntity = new Entity(
+            currentEntity.modifiers(),
+            currentEntity.name(),
+            currentEntity.stereotype(),
+            List.copyOf(currentFields),
+            currentEntity.methods()
+    );
+    var oldEntity = entities.stream()
+            .filter(entity -> entity.name().equals(currentEntity.name()))
+            .findFirst();
     oldEntity.ifPresent(entities::remove);
     entities.add(currentEntity);
 
@@ -179,14 +184,6 @@ public final class JarParser {
                   List.of(),
                   List.of()
           );
-
-//          entities.add(new Entity(
-//                  Set.of(),
-//                  name.replace('/', '_').replace('$', '_'),
-//                  resolveStereotype(superName),
-//                  List.copyOf(fields),
-//                  List.of()
-//          ));
         }
       }
 
