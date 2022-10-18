@@ -30,7 +30,6 @@ public class Main {
             .stream()
             .filter(entity -> entity.name().contains("forax_umldoc"))
             .toList();
-
     var filePath = Path.of(args[0]);
     var plantUmlGenerator = new PlantUmlGenerator();
     var mermaidGenerator = new MermaidGenerator();

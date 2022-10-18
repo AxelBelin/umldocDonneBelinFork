@@ -27,8 +27,6 @@ import org.objectweb.asm.Opcodes;
  */
 public final class JarParser {
   private final HashSet<Entity> entities = new HashSet<>();
-  //private final HashSet<AssociationDependency> associations = new HashSet<>();
-
   private Entity currentEntity = null;
   private final ArrayList<AssociationDependency> associations = new ArrayList<>();
 
@@ -43,6 +41,11 @@ public final class JarParser {
   }
 
 
+  /**
+   * Supplies a list of all Associations parsed from jar file
+   *
+   * @return A list of AssociationDependency object with all parsed associations discovered in the jar file.
+   */
   public List<AssociationDependency> getAssociationDependencies(){
     return List.copyOf(associations);
   }
@@ -120,11 +123,34 @@ public final class JarParser {
   }
 
   private void addFieldOrAssociation(int access, String name, String type, HashSet<Field> currentFields) {
-    currentFields.add(new Field(
+    var field = new Field(
             modifiers(access),
             name.replace('$', '_'),
             type
-    ));
+    );
+    var isAsso = false;
+    int startIndex;
+    int endIndex;
+    while((startIndex = type.indexOf("<")) >= 0 && (endIndex = type.lastIndexOf(">")) >= 0){
+      type = type.substring(startIndex + 1,endIndex);
+      if(!type.contains("<")){
+        var tempType = type;
+        var entityRight = entities.stream()
+                .filter(entity -> entity.name().contains(tempType))
+                .findFirst();
+
+        if(entityRight.isPresent()){
+          isAsso = true;
+          var left = new Side(currentEntity, Optional.empty(), true, Cardinality.ONLY_ONE);
+          var right = new Side(entityRight.get(), Optional.of(field.name()), true, Cardinality.MANY);
+          associations.add(new AssociationDependency(left, right));
+        }
+      }
+    }
+
+    if(!isAsso) {
+      currentFields.add(field);
+    }
 
     currentEntity = new Entity(
             currentEntity.modifiers(),
@@ -138,24 +164,6 @@ public final class JarParser {
             .findFirst();
     oldEntity.ifPresent(entities::remove);
     entities.add(currentEntity);
-
-    int startIndex;
-    int endIndex;
-    while((startIndex = type.indexOf("<")) >= 0 && (endIndex = type.lastIndexOf(">")) >= 0){
-      type = type.substring(startIndex + 1,endIndex);
-      if(!type.contains("<")){
-        var tempType = type;
-        var entityRight = entities.stream()
-                .filter(entity -> entity.name().contains(tempType))
-                .findFirst();
-
-        if(entityRight.isPresent()){
-          var left = new Side(currentEntity, Optional.empty(), true, Cardinality.ONLY_ONE);
-          var right = new Side(entityRight.get(), Optional.empty(), true, Cardinality.MANY);
-          associations.add(new AssociationDependency(left, right));
-        }
-      }
-    }
   }
 
   private void getASMData(ClassReader classReader) {
