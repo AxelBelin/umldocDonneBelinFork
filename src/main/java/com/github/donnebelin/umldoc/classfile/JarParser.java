@@ -2,6 +2,7 @@ package com.github.donnebelin.umldoc.classfile;
 
 import static org.objectweb.asm.Opcodes.ACC_SYNTHETIC;
 
+import com.github.donnebelin.umldoc.builder.TypeInfoBuilder;
 import com.github.forax.umldoc.core.*;
 import com.github.forax.umldoc.core.Entity.Stereotype;
 
@@ -11,10 +12,7 @@ import java.lang.module.ModuleFinder;
 import java.nio.file.Path;
 import java.util.*;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.*;
 
 /**
  * Class to parse a jar file.
@@ -85,13 +83,12 @@ public final class JarParser {
     return modifiers;
   }
 
-  private static TypeInfo resolveTypeParameter(String type, String descriptor) {
-    var typeName = TypeInfo.of(descriptor);
-    if(type == null) {
-      return typeName;
+  private static TypeInfo resolveTypeParameter(String typeParameter, String descriptor) {
+    if(typeParameter == null) {
+      return TypeInfo.of(descriptor);
     }
 
-    return typeName.withTypeParameter(TypeInfo.of(type));
+    return new TypeInfoBuilder().build(typeParameter);
   }
 
   /**
