@@ -38,9 +38,9 @@ public final class MermaidGenerator implements Generator {
     for (var dependency : dependencies) {
       writer.append("""
               %s --> "%s" %s : %s
-              """.formatted(dependency.left().entity().name(),
+              """.formatted(dependency.left().entity().type().name(),
               Helper.parseCardinalities(dependency.right().cardinality()),
-              dependency.right().entity().name(),
+              dependency.right().entity().type().name(),
               dependency.right().label().orElse("Not defined")
       ));
     }
@@ -52,7 +52,7 @@ public final class MermaidGenerator implements Generator {
                   }
 
               """.formatted(
-              entity.name(),
+              entity.type().name(),
               entity.fields()
                       .stream()
                       .map(MermaidGenerator::escapeField)

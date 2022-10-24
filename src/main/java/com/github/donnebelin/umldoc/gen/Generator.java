@@ -36,7 +36,7 @@ public interface Generator {
    * @return the String representation of the given field for Plant UML and Mermaid UML
    */
   static String fieldToString(Field field) {
-    return fieldAccessor(field.modifiers()) + field.name() + ": " + field.type(); // -name: String
+    return fieldAccessor(field.modifiers()) + field.name() + ": " + field.typeInfo().toString(); // -name: String
   }
 
   /**

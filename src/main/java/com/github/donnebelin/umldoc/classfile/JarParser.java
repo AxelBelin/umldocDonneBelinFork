@@ -24,7 +24,6 @@ import org.objectweb.asm.Opcodes;
  */
 public final class JarParser {
   private final HashSet<Entity> entities = new HashSet<>();
-//  private final ArrayList<AssociationDependency> associations = new ArrayList<>();
   private Entity currentEntity = null;
 
   /**
@@ -86,6 +85,15 @@ public final class JarParser {
     return modifiers;
   }
 
+  private static TypeInfo resolveTypeParameter(String type, String descriptor) {
+    var typeName = TypeInfo.of(descriptor);
+    if(type == null) {
+      return typeName;
+    }
+
+    return typeName.withTypeParameter(TypeInfo.of(type));
+  }
+
   /**
    * Supplies a list of all Entities parsed from jar file.
    *
@@ -118,12 +126,12 @@ public final class JarParser {
     }
   }
 
-  private void addEntityAndFields(int access, String name, String type,
+  private void addEntityAndFields(int access, String name, String type, String descriptor,
                                   HashSet<Field> currentFields) {
     currentFields.add(new Field(
             modifiers(access),
             name,
-            TypeInfo.of(type)
+            resolveTypeParameter(type, descriptor)
     ));
 
     currentEntity = new Entity(
@@ -179,6 +187,7 @@ public final class JarParser {
         addEntityAndFields(
                 access,
                 name,
+                signature,
                 ClassDesc.ofDescriptor(descriptor).displayName(),
                 currentFields
         );

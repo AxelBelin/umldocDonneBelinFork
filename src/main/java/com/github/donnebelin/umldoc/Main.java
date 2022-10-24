@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * Contains the main method.
@@ -33,25 +34,25 @@ public class Main {
     var plantUmlGenerator = new PlantUmlGenerator();
     var mermaidGenerator = new MermaidGenerator();
 
-//    try (var writer =
-//                 Files.newBufferedWriter(filePath,
-//                         StandardCharsets.UTF_8)
-//    ) {
-//      plantUmlGenerator.generate(
-//              true,
-//              entities,
-//              depandancies,
-//              writer);
-//      writer.append('\n')
-//              .append('\n')
-//              .append("```mermaid")
-//              .append('\n');
-//      mermaidGenerator.generate(
-//              true,
-//              entities,
-//              depandancies,
-//              writer);
-//      writer.append("```");
-//    }
+    try (var writer =
+                 Files.newBufferedWriter(filePath,
+                         StandardCharsets.UTF_8)
+    ) {
+      plantUmlGenerator.generate(
+              true,
+              entities,
+              List.of(), // depandancies
+              writer);
+      writer.append('\n')
+              .append('\n')
+              .append("```mermaid")
+              .append('\n');
+      mermaidGenerator.generate(
+              true,
+              entities,
+              List.of(), // depandancies
+              writer);
+      writer.append("```");
+    }
   }
 }
