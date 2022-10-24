@@ -1,0 +1,46 @@
+TODO : a remplacer par un stringBuilder qui reconstruit le name en entier dans les Generator.
+Virer les $ pour mermaid : name.replace('$', '_')
+Virer les / pour Plant et Mermaid : name.replace('/', '_').replace('$', '_')
+Virer les ; pour les fields : signature = signature.replaceAll(";", "").replaceAll("<", "</");
+
+Sinature :
+Arrays.stream(signature.split("/"))
+                          .filter(part -> part.contains("<") || part.contains(">"))
+                          .collect(Collectors.joining())
+
+
+  private void addFieldOrAssociation(
+          int access,
+          String name,
+          String type,
+          HashSet<Field> currentFields) {
+    var isAsso = false;
+    int startIndex;
+    int endIndex;
+    while ((startIndex = type.indexOf("<")) >= 0 && (endIndex = type.lastIndexOf(">")) >= 0) {
+      type = type.substring(startIndex + 1, endIndex);
+      if (!type.contains("<")) {
+        var tempType = type;
+        var entityRight = entities.stream()
+                .filter(entity -> entity.name().contains(tempType))
+                .findFirst();
+
+        if (entityRight.isPresent()) {
+          isAsso = true;
+          var left = new Side(
+                  currentEntity,
+                  Optional.empty(),
+                  true,
+                  Cardinality.ONLY_ONE
+          );
+          var right = new Side(
+                  entityRight.get(),
+                  Optional.of(field.name()),
+                  true,
+                  Cardinality.MANY
+          );
+          associations.add(new AssociationDependency(left, right));
+        }
+      }
+    }
+  }
