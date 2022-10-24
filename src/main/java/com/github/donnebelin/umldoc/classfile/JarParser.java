@@ -24,7 +24,7 @@ import org.objectweb.asm.Opcodes;
  */
 public final class JarParser {
   private final HashSet<Entity> entities = new HashSet<>();
-  private final ArrayList<AssociationDependency> associations = new ArrayList<>();
+//  private final ArrayList<AssociationDependency> associations = new ArrayList<>();
   private Entity currentEntity = null;
 
   /**
@@ -84,15 +84,6 @@ public final class JarParser {
     }
 
     return modifiers;
-  }
-
-  /**
-   * Supplies a list of all Associations parsed from jar file.
-   *
-   * @return A list of Association object with all parsed associations discovered in the jar file.
-   */
-  public List<AssociationDependency> getAssociationDependencies() {
-    return List.copyOf(associations);
   }
 
   /**

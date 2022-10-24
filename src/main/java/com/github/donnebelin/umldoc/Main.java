@@ -27,31 +27,31 @@ public class Main {
     var parser = new JarParser();
     var entities = parser.entities()
             .stream()
-            .filter(entity -> entity.name().contains("forax/umldoc"))
+            .filter(entity -> entity.type().name().contains("forax/umldoc")) // just to test with core classes
             .toList();
     var filePath = Path.of(args[0]);
     var plantUmlGenerator = new PlantUmlGenerator();
     var mermaidGenerator = new MermaidGenerator();
 
-    try (var writer =
-                 Files.newBufferedWriter(filePath,
-                         StandardCharsets.UTF_8)
-    ) {
-      plantUmlGenerator.generate(
-              true,
-              entities,
-              parser.getAssociationDependencies(),
-              writer);
-      writer.append('\n')
-              .append('\n')
-              .append("```mermaid")
-              .append('\n');
-      mermaidGenerator.generate(
-              true,
-              entities,
-              parser.getAssociationDependencies(),
-              writer);
-      writer.append("```");
-    }
+//    try (var writer =
+//                 Files.newBufferedWriter(filePath,
+//                         StandardCharsets.UTF_8)
+//    ) {
+//      plantUmlGenerator.generate(
+//              true,
+//              entities,
+//              depandancies,
+//              writer);
+//      writer.append('\n')
+//              .append('\n')
+//              .append("```mermaid")
+//              .append('\n');
+//      mermaidGenerator.generate(
+//              true,
+//              entities,
+//              depandancies,
+//              writer);
+//      writer.append("```");
+//    }
   }
 }
