@@ -50,10 +50,9 @@ public class DiagramFormater {
   private Optional<AssociationDependency> createAssociation(Field field, Entity entityLeft){
     var fieldTypeInfo = getTypeInfo(entityLeft,field.typeInfo());
     if(fieldTypeInfo.isPresent()) {
-      var typeInfo = fieldTypeInfo.get();
-      var cardinality = getCardinality(typeInfo);
+      var cardinality = getCardinality(fieldTypeInfo.get());
       var left = new AssociationDependency.Side(entityLeft, Optional.empty(), false, cardinality);
-      var rightEntity = getEntityByName(typeInfo.name());
+      var rightEntity = getEntityByName(getEntityNameWithoutPackage(fieldTypeInfo.get().name()));
       if(rightEntity.isPresent()){
         var right = new AssociationDependency.Side(rightEntity.get(), Optional.empty(), true, cardinality);
         return Optional.of(new AssociationDependency(left, right));
@@ -87,6 +86,7 @@ public class DiagramFormater {
   private static String getEntityNameWithoutPackage(String entityNameWithPackage) {
     var index = entityNameWithPackage.lastIndexOf("/");
     if(index < 0){
+      //Already no package then return them
       return entityNameWithPackage;
     }
     return entityNameWithPackage.substring(index + 1);
