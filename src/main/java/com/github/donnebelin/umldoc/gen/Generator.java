@@ -1,5 +1,6 @@
 package com.github.donnebelin.umldoc.gen;
 
+import com.github.donnebelin.umldoc.builder.Builder;
 import com.github.forax.umldoc.core.AssociationDependency;
 import com.github.forax.umldoc.core.Entity;
 import com.github.forax.umldoc.core.Field;
@@ -35,8 +36,8 @@ public interface Generator {
    * @param field the field to translate into Plant UML or Mermaid UML String representation
    * @return the String representation of the given field for Plant UML and Mermaid UML
    */
-  static String fieldToString(Field field) {
-    return fieldAccessor(field.modifiers()) + field.name() + ": " + field.typeInfo().toString(); // -name: String
+  static String fieldToString(Field field, Builder<String> builder) {
+    return fieldAccessor(field.modifiers()) + field.name() + ": " + builder.build(field.typeInfo().toString()); // -name: String
   }
 
   /**

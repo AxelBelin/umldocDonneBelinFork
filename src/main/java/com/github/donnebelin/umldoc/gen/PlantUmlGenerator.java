@@ -3,6 +3,7 @@ package com.github.donnebelin.umldoc.gen;
 import static java.util.Objects.requireNonNull;
 
 import com.github.donnebelin.umldoc.Helper;
+import com.github.donnebelin.umldoc.builder.GeneratorBuilder;
 import com.github.forax.umldoc.core.AssociationDependency;
 import com.github.forax.umldoc.core.Entity;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
  * Generate a class diagram using the plantuml format.
  */
 public final class PlantUmlGenerator implements Generator {
+  private final GeneratorBuilder.PlantBuilder builder = new GeneratorBuilder.PlantBuilder();
   @Override
   public void generate(boolean header, List<Entity> entities,
                        List<AssociationDependency> dependencies,
@@ -46,10 +48,10 @@ public final class PlantUmlGenerator implements Generator {
                   }
 
               """.formatted(
-              entity.type().name(),
+              builder.build(entity.type().name()),
               entity.fields()
                       .stream()
-                      .map(Generator::fieldToString)
+                      .map(field -> Generator.fieldToString(field, builder))
                       .collect(Collectors.joining("\n\t\t\t"))
       ));
     }

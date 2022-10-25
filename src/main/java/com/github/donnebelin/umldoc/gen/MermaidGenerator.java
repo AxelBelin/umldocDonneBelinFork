@@ -1,9 +1,9 @@
 package com.github.donnebelin.umldoc.gen;
 
 import com.github.donnebelin.umldoc.Helper;
+import com.github.donnebelin.umldoc.builder.GeneratorBuilder;
 import com.github.forax.umldoc.core.AssociationDependency;
 import com.github.forax.umldoc.core.Entity;
-import com.github.forax.umldoc.core.Field;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
@@ -14,11 +14,7 @@ import java.util.stream.Collectors;
  * Generate a class diagram using the mermaid format.
  */
 public final class MermaidGenerator implements Generator {
-  private static String escapeField(Field field) {
-    return Generator.fieldToString(field).replaceAll("<", "[").replaceAll(">", "]");
-  }
-
-
+  private final GeneratorBuilder.MermaidBuilder builder = new GeneratorBuilder.MermaidBuilder();
   @Override
   public void generate(boolean header, List<Entity> entities,
                        List<AssociationDependency> dependencies,
@@ -52,12 +48,11 @@ public final class MermaidGenerator implements Generator {
                   }
 
               """.formatted(
-              entity.type().name(),
+              builder.build(entity.type().name()),
               entity.fields()
                       .stream()
-                      .map(MermaidGenerator::escapeField)
+                      .map(field -> Generator.fieldToString(field, builder))
                       .collect(Collectors.joining("\n\t\t\t"))
-
       ));
     }
   }
