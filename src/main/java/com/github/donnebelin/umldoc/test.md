@@ -1,40 +1,47 @@
 @startuml
 
-    class com/github/forax/umldoc/classfile/ClassFileParser$EntityBuilder {
-      -name: String
-    }
-
-    class com/github/forax/umldoc/core/Method {
-      -returnTypeInfo: TypeInfo
-			-modifiers: Set<Ljava/util/Set<Lcom/github/forax/umldoc/core/Modifier;>;>
-			-parameters: List<Ljava/util/List<Lcom/github/forax/umldoc/core/Method$Parameter;>;>
-			-name: String
+    class com/github/forax/umldoc/core/AssociationDependency$Cardinality {
+      +ZERO_OR_ONE: AssociationDependency$Cardinality
+			+MANY: AssociationDependency$Cardinality
+			+ONLY_ONE: AssociationDependency$Cardinality
     }
 
     class com/github/forax/umldoc/core/SubtypeDependency {
-      -supertype: Entity
-			-subtype: Entity
+      -subtype: Entity
+			-supertype: Entity
+    }
+
+    class com/github/forax/umldoc/core/Modifier {
+      +PRIVATE: Modifier
+			+FINAL: Modifier
+			+STATIC: Modifier
+			+PUBLIC: Modifier
+			+PROTECTED: Modifier
+			+PACKAGE: Modifier
+    }
+
+    class com/github/forax/umldoc/core/Package {
+      -entities: java/util/List<com/github/forax/umldoc/core/Entity>
+			-name: String
+			-dependencies: java/util/List<com/github/forax/umldoc/core/Dependency>
+    }
+
+    class com/github/forax/umldoc/core/Field {
+      -modifiers: java/util/Set<com/github/forax/umldoc/core/Modifier>
+			-typeInfo: TypeInfo
+			-name: String
     }
 
     class com/github/forax/umldoc/core/AssociationDependency {
-      -right: AssociationDependency$Side
-			-left: AssociationDependency$Side
+      -left: AssociationDependency$Side
+			-right: AssociationDependency$Side
     }
 
-    class com/github/forax/umldoc/core/Entity$Stereotype {
-      +INTERFACE: Entity$Stereotype
-			+CLASS: Entity$Stereotype
-			+ENUM: Entity$Stereotype
-			+RECORD: Entity$Stereotype
-			+ANNOTATION: Entity$Stereotype
-			+ABSTRACT: Entity$Stereotype
-    }
-
-    class com/github/forax/umldoc/core/AssociationDependency$Side {
-      -cardinality: AssociationDependency$Cardinality
-			-navigability: boolean
-			-entity: Entity
-			-label: Optional<Ljava/util/Optional<Ljava/lang/String;>;>
+    class com/github/forax/umldoc/core/Method {
+      -modifiers: java/util/Set<com/github/forax/umldoc/core/Modifier>
+			-returnTypeInfo: TypeInfo
+			-parameters: java/util/List<com/github/forax/umldoc/core/Method$Parameter>
+			-name: String
     }
 
     class com/github/forax/umldoc/core/Method$Parameter {
@@ -42,45 +49,38 @@
 			-name: String
     }
 
-    class com/github/forax/umldoc/core/Modifier {
-      +PACKAGE: Modifier
-			+PROTECTED: Modifier
-			+PUBLIC: Modifier
-			+STATIC: Modifier
-			+PRIVATE: Modifier
-			+FINAL: Modifier
+    class com/github/forax/umldoc/core/AssociationDependency$Side {
+      -entity: Entity
+			-cardinality: AssociationDependency$Cardinality
+			-label: java/util/Optional<java/lang/String>
+			-navigability: boolean
+    }
+
+    class com/github/forax/umldoc/classfile/ClassFileParser$EntityBuilder {
+      -name: String
+    }
+
+    class com/github/forax/umldoc/core/Entity$Stereotype {
+      +CLASS: Entity$Stereotype
+			+INTERFACE: Entity$Stereotype
+			+ABSTRACT: Entity$Stereotype
+			+ANNOTATION: Entity$Stereotype
+			+RECORD: Entity$Stereotype
+			+ENUM: Entity$Stereotype
     }
 
     class com/github/forax/umldoc/core/Entity {
-      -fields: List<Ljava/util/List<Lcom/github/forax/umldoc/core/Field;>;>
-			-type: TypeInfo
-			-methods: List<Ljava/util/List<Lcom/github/forax/umldoc/core/Method;>;>
-			-modifiers: Set<Ljava/util/Set<Lcom/github/forax/umldoc/core/Modifier;>;>
+      -type: TypeInfo
+			-modifiers: java/util/Set<com/github/forax/umldoc/core/Modifier>
+			-methods: java/util/List<com/github/forax/umldoc/core/Method>
 			-stereotype: Entity$Stereotype
-    }
-
-    class com/github/forax/umldoc/core/AssociationDependency$Cardinality {
-      +ZERO_OR_ONE: AssociationDependency$Cardinality
-			+ONLY_ONE: AssociationDependency$Cardinality
-			+MANY: AssociationDependency$Cardinality
-    }
-
-    class com/github/forax/umldoc/core/Package {
-      -dependencies: List<Ljava/util/List<Lcom/github/forax/umldoc/core/Dependency;>;>
-			-name: String
-			-entities: List<Ljava/util/List<Lcom/github/forax/umldoc/core/Entity;>;>
-    }
-
-    class com/github/forax/umldoc/core/Field {
-      -modifiers: Set<Ljava/util/Set<Lcom/github/forax/umldoc/core/Modifier;>;>
-			-typeInfo: TypeInfo
-			-name: String
+			-fields: java/util/List<com/github/forax/umldoc/core/Field>
     }
 
     class com/github/forax/umldoc/core/TypeInfo {
-      -typeParameters: List<Ljava/util/List<Lcom/github/forax/umldoc/core/TypeInfo;>;>
-			-outer: Optional<Ljava/util/Optional<Lcom/github/forax/umldoc/core/TypeInfo;>;>
+      -typeParameters: java/util/List<com/github/forax/umldoc/core/TypeInfo>
 			-name: String
+			-outer: java/util/Optional<com/github/forax/umldoc/core/TypeInfo>
     }
 
 @enduml
@@ -90,41 +90,48 @@
 classDiagram
     direction TB
 
-    class com/github/forax/umldoc/classfile/ClassFileParser$EntityBuilder {
-      -name: String
-    }
-
-    class com/github/forax/umldoc/core/Method {
-      -returnTypeInfo: TypeInfo
-			-modifiers: Set[Ljava/util/Set[Lcom/github/forax/umldoc/core/Modifier;];]
-			-parameters: List[Ljava/util/List[Lcom/github/forax/umldoc/core/Method$Parameter;];]
-			-name: String
+    class com/github/forax/umldoc/core/AssociationDependency$Cardinality {
+      +ZERO_OR_ONE: AssociationDependency$Cardinality
+			+MANY: AssociationDependency$Cardinality
+			+ONLY_ONE: AssociationDependency$Cardinality
     }
 
     class com/github/forax/umldoc/core/SubtypeDependency {
-      -supertype: Entity
-			-subtype: Entity
+      -subtype: Entity
+			-supertype: Entity
+    }
+
+    class com/github/forax/umldoc/core/Modifier {
+      +PRIVATE: Modifier
+			+FINAL: Modifier
+			+STATIC: Modifier
+			+PUBLIC: Modifier
+			+PROTECTED: Modifier
+			+PACKAGE: Modifier
+    }
+
+    class com/github/forax/umldoc/core/Package {
+      -entities: java/util/List[com/github/forax/umldoc/core/Entity]
+			-name: String
+			-dependencies: java/util/List[com/github/forax/umldoc/core/Dependency]
+    }
+
+    class com/github/forax/umldoc/core/Field {
+      -modifiers: java/util/Set[com/github/forax/umldoc/core/Modifier]
+			-typeInfo: TypeInfo
+			-name: String
     }
 
     class com/github/forax/umldoc/core/AssociationDependency {
-      -right: AssociationDependency$Side
-			-left: AssociationDependency$Side
+      -left: AssociationDependency$Side
+			-right: AssociationDependency$Side
     }
 
-    class com/github/forax/umldoc/core/Entity$Stereotype {
-      +INTERFACE: Entity$Stereotype
-			+CLASS: Entity$Stereotype
-			+ENUM: Entity$Stereotype
-			+RECORD: Entity$Stereotype
-			+ANNOTATION: Entity$Stereotype
-			+ABSTRACT: Entity$Stereotype
-    }
-
-    class com/github/forax/umldoc/core/AssociationDependency$Side {
-      -cardinality: AssociationDependency$Cardinality
-			-navigability: boolean
-			-entity: Entity
-			-label: Optional[Ljava/util/Optional[Ljava/lang/String;];]
+    class com/github/forax/umldoc/core/Method {
+      -modifiers: java/util/Set[com/github/forax/umldoc/core/Modifier]
+			-returnTypeInfo: TypeInfo
+			-parameters: java/util/List[com/github/forax/umldoc/core/Method$Parameter]
+			-name: String
     }
 
     class com/github/forax/umldoc/core/Method$Parameter {
@@ -132,45 +139,38 @@ classDiagram
 			-name: String
     }
 
-    class com/github/forax/umldoc/core/Modifier {
-      +PACKAGE: Modifier
-			+PROTECTED: Modifier
-			+PUBLIC: Modifier
-			+STATIC: Modifier
-			+PRIVATE: Modifier
-			+FINAL: Modifier
+    class com/github/forax/umldoc/core/AssociationDependency$Side {
+      -entity: Entity
+			-cardinality: AssociationDependency$Cardinality
+			-label: java/util/Optional[java/lang/String]
+			-navigability: boolean
+    }
+
+    class com/github/forax/umldoc/classfile/ClassFileParser$EntityBuilder {
+      -name: String
+    }
+
+    class com/github/forax/umldoc/core/Entity$Stereotype {
+      +CLASS: Entity$Stereotype
+			+INTERFACE: Entity$Stereotype
+			+ABSTRACT: Entity$Stereotype
+			+ANNOTATION: Entity$Stereotype
+			+RECORD: Entity$Stereotype
+			+ENUM: Entity$Stereotype
     }
 
     class com/github/forax/umldoc/core/Entity {
-      -fields: List[Ljava/util/List[Lcom/github/forax/umldoc/core/Field;];]
-			-type: TypeInfo
-			-methods: List[Ljava/util/List[Lcom/github/forax/umldoc/core/Method;];]
-			-modifiers: Set[Ljava/util/Set[Lcom/github/forax/umldoc/core/Modifier;];]
+      -type: TypeInfo
+			-modifiers: java/util/Set[com/github/forax/umldoc/core/Modifier]
+			-methods: java/util/List[com/github/forax/umldoc/core/Method]
 			-stereotype: Entity$Stereotype
-    }
-
-    class com/github/forax/umldoc/core/AssociationDependency$Cardinality {
-      +ZERO_OR_ONE: AssociationDependency$Cardinality
-			+ONLY_ONE: AssociationDependency$Cardinality
-			+MANY: AssociationDependency$Cardinality
-    }
-
-    class com/github/forax/umldoc/core/Package {
-      -dependencies: List[Ljava/util/List[Lcom/github/forax/umldoc/core/Dependency;];]
-			-name: String
-			-entities: List[Ljava/util/List[Lcom/github/forax/umldoc/core/Entity;];]
-    }
-
-    class com/github/forax/umldoc/core/Field {
-      -modifiers: Set[Ljava/util/Set[Lcom/github/forax/umldoc/core/Modifier;];]
-			-typeInfo: TypeInfo
-			-name: String
+			-fields: java/util/List[com/github/forax/umldoc/core/Field]
     }
 
     class com/github/forax/umldoc/core/TypeInfo {
-      -typeParameters: List[Ljava/util/List[Lcom/github/forax/umldoc/core/TypeInfo;];]
-			-outer: Optional[Ljava/util/Optional[Lcom/github/forax/umldoc/core/TypeInfo;];]
+      -typeParameters: java/util/List[com/github/forax/umldoc/core/TypeInfo]
 			-name: String
+			-outer: java/util/Optional[com/github/forax/umldoc/core/TypeInfo]
     }
 
 ```

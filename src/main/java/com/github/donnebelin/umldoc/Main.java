@@ -1,5 +1,6 @@
 package com.github.donnebelin.umldoc;
 
+import com.github.donnebelin.umldoc.classdiagram.DiagramFormater;
 import com.github.donnebelin.umldoc.classfile.JarParser;
 import com.github.donnebelin.umldoc.gen.MermaidGenerator;
 import com.github.donnebelin.umldoc.gen.PlantUmlGenerator;
@@ -31,6 +32,11 @@ public class Main {
             .filter(entity -> entity.type().name().contains("forax/umldoc")) // just to test with core classes
             .toList();
     var filePath = Path.of(args[0]);
+
+    var diagramFormater = new DiagramFormater(entities);
+    entities.forEach(ent -> System.out.println(ent.type().name()));
+    System.out.println("FINAL RESULT + " + diagramFormater.createAssociationDependencies());
+    diagramFormater.createAssociationDependencies().forEach(e -> System.out.println("RESULT = " + e.left().entity().type().name() + "  " + e.right().entity().type().name()));
     var plantUmlGenerator = new PlantUmlGenerator();
     var mermaidGenerator = new MermaidGenerator();
 
