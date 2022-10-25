@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Convert a list of entities and a list of dependencies to a textual representation.
  */
-public interface Generator {
+public sealed interface Generator permits MermaidGenerator, PlantUmlGenerator {
   private static char fieldAccessor(Set<Modifier> modifiers) {
     if (modifiers.contains(Modifier.PRIVATE)) {
       return '-';

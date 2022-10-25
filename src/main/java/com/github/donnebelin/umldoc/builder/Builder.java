@@ -1,5 +1,5 @@
 package com.github.donnebelin.umldoc.builder;
 
-public interface Builder<T> {
+public sealed interface Builder<T> permits GeneratorBuilder.MermaidBuilder, GeneratorBuilder.PlantBuilder, TypeInfoBuilder {
     T build(String signature);
 }
