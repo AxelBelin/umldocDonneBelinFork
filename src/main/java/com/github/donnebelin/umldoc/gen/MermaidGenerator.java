@@ -2,6 +2,7 @@ package com.github.donnebelin.umldoc.gen;
 
 import com.github.donnebelin.umldoc.Helper;
 import com.github.donnebelin.umldoc.builder.GeneratorBuilder;
+import com.github.donnebelin.umldoc.classdiagram.DiagramFormater;
 import com.github.forax.umldoc.core.AssociationDependency;
 import com.github.forax.umldoc.core.Entity;
 import java.io.IOException;
@@ -34,9 +35,9 @@ public final class MermaidGenerator implements Generator {
     for (var dependency : dependencies) {
       writer.append("""
               %s --> "%s" %s : %s
-              """.formatted(dependency.left().entity().type().name(),
+              """.formatted(DiagramFormater.getEntityNameWithoutPackage(dependency.left().entity().type().name()),
               Helper.parseCardinalities(dependency.right().cardinality()),
-              dependency.right().entity().type().name(),
+              DiagramFormater.getEntityNameWithoutPackage(dependency.right().entity().type().name()),
               dependency.right().label().orElse("Not defined")
       ));
     }
@@ -48,7 +49,7 @@ public final class MermaidGenerator implements Generator {
                   }
 
               """.formatted(
-              builder.build(entity.type().name()),
+              builder.build(DiagramFormater.getEntityNameWithoutPackage(entity.type().name())),
               entity.fields()
                       .stream()
                       .map(field -> Generator.fieldToString(field, builder))

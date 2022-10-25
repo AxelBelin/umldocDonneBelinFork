@@ -1,17 +1,28 @@
 @startuml
 
-    class com_github_forax_umldoc_core_AssociationDependency$Cardinality {
+SubtypeDependency "1" -->  "1" Entity : Not defined
+SubtypeDependency "1" -->  "1" Entity : Not defined
+Field "1" -->  "1" TypeInfo : Not defined
+AssociationDependency "1" -->  "1" AssociationDependency$Side : Not defined
+AssociationDependency "1" -->  "1" AssociationDependency$Side : Not defined
+Method "1" -->  "1" TypeInfo : Not defined
+Method$Parameter "1" -->  "1" TypeInfo : Not defined
+AssociationDependency$Side "1" -->  "1" Entity : Not defined
+AssociationDependency$Side "1" -->  "1" AssociationDependency$Cardinality : Not defined
+Entity "1" -->  "1" TypeInfo : Not defined
+Entity "1" -->  "1" Entity$Stereotype : Not defined
+    class AssociationDependency$Cardinality {
       +ZERO_OR_ONE: AssociationDependency$Cardinality
 			+MANY: AssociationDependency$Cardinality
 			+ONLY_ONE: AssociationDependency$Cardinality
     }
 
-    class com_github_forax_umldoc_core_SubtypeDependency {
+    class SubtypeDependency {
       -subtype: Entity
 			-supertype: Entity
     }
 
-    class com_github_forax_umldoc_core_Modifier {
+    class Modifier {
       +PRIVATE: Modifier
 			+FINAL: Modifier
 			+STATIC: Modifier
@@ -20,47 +31,47 @@
 			+PACKAGE: Modifier
     }
 
-    class com_github_forax_umldoc_core_Package {
+    class Package {
       -entities: java_util_List<com_github_forax_umldoc_core_Entity>
 			-name: String
 			-dependencies: java_util_List<com_github_forax_umldoc_core_Dependency>
     }
 
-    class com_github_forax_umldoc_core_Field {
+    class Field {
       -modifiers: java_util_Set<com_github_forax_umldoc_core_Modifier>
 			-typeInfo: TypeInfo
 			-name: String
     }
 
-    class com_github_forax_umldoc_core_AssociationDependency {
+    class AssociationDependency {
       -left: AssociationDependency$Side
 			-right: AssociationDependency$Side
     }
 
-    class com_github_forax_umldoc_core_Method {
+    class Method {
       -modifiers: java_util_Set<com_github_forax_umldoc_core_Modifier>
 			-returnTypeInfo: TypeInfo
 			-parameters: java_util_List<com_github_forax_umldoc_core_Method$Parameter>
 			-name: String
     }
 
-    class com_github_forax_umldoc_core_Method$Parameter {
+    class Method$Parameter {
       -typeInfo: TypeInfo
 			-name: String
     }
 
-    class com_github_forax_umldoc_core_AssociationDependency$Side {
+    class AssociationDependency$Side {
       -entity: Entity
 			-cardinality: AssociationDependency$Cardinality
 			-label: java_util_Optional<java_lang_String>
 			-navigability: boolean
     }
 
-    class com_github_forax_umldoc_classfile_ClassFileParser$EntityBuilder {
+    class ClassFileParser$EntityBuilder {
       -name: String
     }
 
-    class com_github_forax_umldoc_core_Entity$Stereotype {
+    class Entity$Stereotype {
       +CLASS: Entity$Stereotype
 			+INTERFACE: Entity$Stereotype
 			+ABSTRACT: Entity$Stereotype
@@ -69,7 +80,7 @@
 			+ENUM: Entity$Stereotype
     }
 
-    class com_github_forax_umldoc_core_Entity {
+    class Entity {
       -type: TypeInfo
 			-modifiers: java_util_Set<com_github_forax_umldoc_core_Modifier>
 			-methods: java_util_List<com_github_forax_umldoc_core_Method>
@@ -77,7 +88,7 @@
 			-fields: java_util_List<com_github_forax_umldoc_core_Field>
     }
 
-    class com_github_forax_umldoc_core_TypeInfo {
+    class TypeInfo {
       -typeParameters: java_util_List<com_github_forax_umldoc_core_TypeInfo>
 			-name: String
 			-outer: java_util_Optional<com_github_forax_umldoc_core_TypeInfo>
@@ -90,18 +101,29 @@
 classDiagram
     direction TB
 
-    class com_github_forax_umldoc_core_AssociationDependency_Cardinality {
+SubtypeDependency --> "1" Entity : Not defined
+SubtypeDependency --> "1" Entity : Not defined
+Field --> "1" TypeInfo : Not defined
+AssociationDependency --> "1" AssociationDependency$Side : Not defined
+AssociationDependency --> "1" AssociationDependency$Side : Not defined
+Method --> "1" TypeInfo : Not defined
+Method$Parameter --> "1" TypeInfo : Not defined
+AssociationDependency$Side --> "1" Entity : Not defined
+AssociationDependency$Side --> "1" AssociationDependency$Cardinality : Not defined
+Entity --> "1" TypeInfo : Not defined
+Entity --> "1" Entity$Stereotype : Not defined
+    class AssociationDependency_Cardinality {
       +ZERO_OR_ONE: AssociationDependency_Cardinality
 			+MANY: AssociationDependency_Cardinality
 			+ONLY_ONE: AssociationDependency_Cardinality
     }
 
-    class com_github_forax_umldoc_core_SubtypeDependency {
+    class SubtypeDependency {
       -subtype: Entity
 			-supertype: Entity
     }
 
-    class com_github_forax_umldoc_core_Modifier {
+    class Modifier {
       +PRIVATE: Modifier
 			+FINAL: Modifier
 			+STATIC: Modifier
@@ -110,47 +132,47 @@ classDiagram
 			+PACKAGE: Modifier
     }
 
-    class com_github_forax_umldoc_core_Package {
+    class Package {
       -entities: java_util_List[com_github_forax_umldoc_core_Entity]
 			-name: String
 			-dependencies: java_util_List[com_github_forax_umldoc_core_Dependency]
     }
 
-    class com_github_forax_umldoc_core_Field {
+    class Field {
       -modifiers: java_util_Set[com_github_forax_umldoc_core_Modifier]
 			-typeInfo: TypeInfo
 			-name: String
     }
 
-    class com_github_forax_umldoc_core_AssociationDependency {
+    class AssociationDependency {
       -left: AssociationDependency_Side
 			-right: AssociationDependency_Side
     }
 
-    class com_github_forax_umldoc_core_Method {
+    class Method {
       -modifiers: java_util_Set[com_github_forax_umldoc_core_Modifier]
 			-returnTypeInfo: TypeInfo
 			-parameters: java_util_List[com_github_forax_umldoc_core_Method_Parameter]
 			-name: String
     }
 
-    class com_github_forax_umldoc_core_Method_Parameter {
+    class Method_Parameter {
       -typeInfo: TypeInfo
 			-name: String
     }
 
-    class com_github_forax_umldoc_core_AssociationDependency_Side {
+    class AssociationDependency_Side {
       -entity: Entity
 			-cardinality: AssociationDependency_Cardinality
 			-label: java_util_Optional[java_lang_String]
 			-navigability: boolean
     }
 
-    class com_github_forax_umldoc_classfile_ClassFileParser_EntityBuilder {
+    class ClassFileParser_EntityBuilder {
       -name: String
     }
 
-    class com_github_forax_umldoc_core_Entity_Stereotype {
+    class Entity_Stereotype {
       +CLASS: Entity_Stereotype
 			+INTERFACE: Entity_Stereotype
 			+ABSTRACT: Entity_Stereotype
@@ -159,7 +181,7 @@ classDiagram
 			+ENUM: Entity_Stereotype
     }
 
-    class com_github_forax_umldoc_core_Entity {
+    class Entity {
       -type: TypeInfo
 			-modifiers: java_util_Set[com_github_forax_umldoc_core_Modifier]
 			-methods: java_util_List[com_github_forax_umldoc_core_Method]
@@ -167,7 +189,7 @@ classDiagram
 			-fields: java_util_List[com_github_forax_umldoc_core_Field]
     }
 
-    class com_github_forax_umldoc_core_TypeInfo {
+    class TypeInfo {
       -typeParameters: java_util_List[com_github_forax_umldoc_core_TypeInfo]
 			-name: String
 			-outer: java_util_Optional[com_github_forax_umldoc_core_TypeInfo]

@@ -34,7 +34,7 @@ public class Main {
     var filePath = Path.of(args[0]);
 
     var diagramFormater = new DiagramFormater(entities);
-    diagramFormater.createAssociationDependencies().forEach(e -> System.out.println("RESULT = " + e.left().entity().type().name() + "  " + e.right().entity().type().name()));
+    var dependencies = diagramFormater.createAssociationDependencies();
 
     var plantUmlGenerator = new PlantUmlGenerator();
     var mermaidGenerator = new MermaidGenerator();
@@ -46,7 +46,7 @@ public class Main {
       plantUmlGenerator.generate(
               true,
               entities,
-              List.of(), // depandancies
+              dependencies, // depandancies
               writer);
       writer.append('\n')
               .append('\n')
@@ -55,7 +55,7 @@ public class Main {
       mermaidGenerator.generate(
               true,
               entities,
-              List.of(), // depandancies
+              dependencies, // depandancies
               writer);
       writer.append("```");
     }

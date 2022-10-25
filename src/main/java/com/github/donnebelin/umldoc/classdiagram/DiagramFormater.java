@@ -43,11 +43,14 @@ public class DiagramFormater {
         }
       }
     }
-    return associationList;
+    //TODO Use method to clean dependencies and an other to format entitites name
+    return associationList.stream()
+        .filter(associationDependency -> !associationDependency.left().entity().type().name().equals(associationDependency.right().entity().type().name()))
+        .toList();
   }
 
   private Optional<AssociationDependency> createAssociation(Field field, Entity entityLeft){
-    var fieldTypeInfo = getTypeInfo(entityLeft,field);
+    var fieldTypeInfo = parseEntityFieldToType(entityLeft,field);
     if(fieldTypeInfo.isPresent()) {
       var cardinality = getCardinality(fieldTypeInfo.get());
       var left = new AssociationDependency.Side(entityLeft, Optional.empty(), false, cardinality);
@@ -72,9 +75,12 @@ public class DiagramFormater {
   }
 
   private boolean entityAsSamePackage(String entityName1, String entityName2){
-    return mappedEntitiesToPackage.entrySet().stream()
-        .map(entry -> entry.getValue()).flatMap(Collection::stream)
-        .anyMatch(entityName -> entityName1.equals(entityName) && entityName2.equals(entityName));
+    var entity1 = getEntityByName(getEntityNameWithoutPackage(entityName1));
+    var entity2 = getEntityByName(getEntityNameWithoutPackage(entityName2));
+    if(!entity1.isPresent() || !entity2.isPresent()){
+      return false;
+    }
+    return getPackageName(entity1.get()).equals(getPackageName(entity2.get()));
   }
 
   private static String getPackageName(Entity entity) {
@@ -82,7 +88,7 @@ public class DiagramFormater {
     return packageWithName.substring(0, packageWithName.lastIndexOf("/"));
   }
 
-  private static String getEntityNameWithoutPackage(String entityNameWithPackage) {
+  public static String getEntityNameWithoutPackage(String entityNameWithPackage) {
     var index = entityNameWithPackage.lastIndexOf("/");
     if(index < 0){
       //Already no package then return them
@@ -91,9 +97,9 @@ public class DiagramFormater {
     return entityNameWithPackage.substring(index + 1);
   }
 
-  private Optional<TypeInfo> getTypeInfo(Entity left, Field field) {
+  private Optional<TypeInfo> parseEntityFieldToType(Entity left, Field field) {
     var type = field.typeInfo();
-    if(entityAsSamePackage(getEntityNameWithoutPackage(left.type().name()),getEntityNameWithoutPackage(type.name()))){
+    if(entityAsSamePackage(left.type().name(),type.name())){
       if (entityNameExist(getEntityNameWithoutPackage(type.name()))) {
         return Optional.of(type);
       }
