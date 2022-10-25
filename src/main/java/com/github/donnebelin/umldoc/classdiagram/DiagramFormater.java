@@ -25,7 +25,6 @@ public class DiagramFormater {
     this.mappedEntitiesToPackage = mapPackageToEntities(entities);
   }
 
-
   private boolean entityNameExist(String entityName){
     return entities.stream().anyMatch(entity -> getEntityNameWithoutPackage(entity.type().name()).equals(getEntityNameWithoutPackage(entityName)));
   }
@@ -48,7 +47,7 @@ public class DiagramFormater {
   }
 
   private Optional<AssociationDependency> createAssociation(Field field, Entity entityLeft){
-    var fieldTypeInfo = getTypeInfo(entityLeft,field.typeInfo());
+    var fieldTypeInfo = getTypeInfo(entityLeft,field);
     if(fieldTypeInfo.isPresent()) {
       var cardinality = getCardinality(fieldTypeInfo.get());
       var left = new AssociationDependency.Side(entityLeft, Optional.empty(), false, cardinality);
@@ -92,10 +91,11 @@ public class DiagramFormater {
     return entityNameWithPackage.substring(index + 1);
   }
 
-  private Optional<TypeInfo> getTypeInfo(Entity left, TypeInfo typeInfo) {
-    if(entityAsSamePackage(getEntityNameWithoutPackage(left.type().name()),getEntityNameWithoutPackage(typeInfo.name()))){
-      if (entityNameExist(getEntityNameWithoutPackage(typeInfo.name()))) {
-        return Optional.of(typeInfo);
+  private Optional<TypeInfo> getTypeInfo(Entity left, Field field) {
+    var type = field.typeInfo();
+    if(entityAsSamePackage(getEntityNameWithoutPackage(left.type().name()),getEntityNameWithoutPackage(type.name()))){
+      if (entityNameExist(getEntityNameWithoutPackage(type.name()))) {
+        return Optional.of(type);
       }
     }
     return Optional.empty();
