@@ -34,9 +34,8 @@ public class Main {
     var filePath = Path.of(args[0]);
 
     var diagramFormater = new DiagramFormater(entities);
-    entities.forEach(ent -> System.out.println(ent.type().name()));
-    System.out.println("FINAL RESULT + " + diagramFormater.createAssociationDependencies());
     diagramFormater.createAssociationDependencies().forEach(e -> System.out.println("RESULT = " + e.left().entity().type().name() + "  " + e.right().entity().type().name()));
+
     var plantUmlGenerator = new PlantUmlGenerator();
     var mermaidGenerator = new MermaidGenerator();
 
